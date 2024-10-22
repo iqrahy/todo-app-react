@@ -1,31 +1,31 @@
 import {
-  Alert,
-  AlertTitle,
   Box,
   Button,
   IconButton,
   List,
   ListItem,
   ListItemText,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const ToDo = () => {
   const [input, setInput] = useState("");
   const [toDolist, setToDoList] = useState([]);
 
   const addTask = () => {
+    if (input === "") {
+      alert("Type Something");
+      return;
+    }
+
     const updateTask = [...toDolist, input];
 
     setToDoList(updateTask);
 
-   
     localStorage.setItem("task", JSON.stringify(updateTask));
-
 
     setInput("");
   };
@@ -36,6 +36,14 @@ const ToDo = () => {
       setToDoList(savedTasks);
     }
   }, []);
+
+  const removeTask = (index) => {
+    const updatedTasks = toDolist.filter((_, i) => i !== index);
+
+    setToDoList(updatedTasks);
+
+    localStorage.setItem("task", JSON.stringify(updatedTasks));
+  };
 
   return (
     <Box sx={{ height: "100vh" }}>
@@ -68,8 +76,11 @@ const ToDo = () => {
               key={index}
               disableGutters
               secondaryAction={
-                <IconButton aria-label="comment">
-                  <CloseIcon />
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => removeTask(index)}
+                >
+                  <ClearIcon />
                 </IconButton>
               }
             >
